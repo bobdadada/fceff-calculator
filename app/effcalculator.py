@@ -8,7 +8,7 @@ import numpy as np
 import unyt
 
 matplotlib.use('TkAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTKAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
 from cavag.utils import calculate_total_efficiency
@@ -367,7 +367,7 @@ try:
 
 
     def draw_figure(canvas, figure):
-        figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
+        figure_canvas_agg = FigureCanvas(figure, canvas)
         figure_canvas_agg.draw()
         figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
         return figure_canvas_agg
