@@ -1,0 +1,130 @@
+{
+  "L": {
+    "default": 0.0003,
+    "min": 0.0002,
+    "max": 0.0004,
+    "step": 1e-06,
+    "info": "腔长",
+    "changeable": true,
+    "unit": "m",
+    "show_unit": "um"
+  },
+  "D": {
+    "default": 8e-05,
+    "min": 1e-05,
+    "max": 0.000125,
+    "step": 5e-06,
+    "info": "腔面有效直径",
+    "changeable": true,
+    "unit": "m",
+    "show_unit": "um"
+  },
+  "ROCl": {
+    "default": Infinity,
+    "min": 0.0001,
+    "max": Infinity,
+    "step": 2e-05,
+    "info": "左边腔面曲率半径",
+    "changeable": true,
+    "unit": "m",
+    "show_unit": "um"
+  },
+  "ROCr": {
+    "default": 0.00031,
+    "min": 0.0002,
+    "max": 0.0004,
+    "step": 1e-06,
+    "info": "右边腔面曲率半径",
+    "changeable": true,
+    "unit": "m",
+    "show_unit": "um"
+  },
+  "sigmasc": {
+    "default": 2e-10,
+    "min": 0.0,
+    "max": Infinity,
+    "step": 1e-11,
+    "info": "腔面表面粗超度",
+    "changeable": true,
+    "unit": "m",
+    "show_unit": "nm"
+  },
+  "Rl": {
+    "default": 0.995,
+    "min": 0,
+    "max": 1,
+    "step": 1e-05,
+    "info": "左边腔面理论反射率",
+    "changeable": true,
+    "unit": "",
+    "show_unit": ""
+  },
+  "Rr": {
+    "default": 0.9995,
+    "min": 0.995,
+    "max": 0.9999,
+    "step": 1e-05,
+    "info": "右边腔面理论反射率",
+    "changeable": true,
+    "unit": "",
+    "show_unit": ""
+  },
+  "T2L": {
+    "default": 10.0,
+    "min": 0.0,
+    "max": 20.0,
+    "step": 1.0,
+    "info": "腔面理论透射损耗比",
+    "changeable": true,
+    "unit": "",
+    "show_unit": ""
+  },
+  "description": {
+    "particle": "Ba+"
+  },
+  "wavelength": {
+    "default": 4.934077e-07,
+    "unit": "m",
+    "show_unit": "nm"
+  },
+  "gamma": {
+    "default": 95300000.0,
+    "unit": "Hz",
+    "show_unit": "MHz"
+  },
+  "fiber": {
+    "default": "LMA-5",
+    "types": {
+      "LMA-5": {
+        "omegaf": 2.4e-06,
+        "nf": 1.486,
+        "type": "LMA-5"
+      },
+      "LMA-20": {
+        "omegaf": 6.9e-06,
+        "nf": 1.486,
+        "type": "LMA-20"
+      },
+      "LMA-15": {
+        "omegaf": 6.25e-06,
+        "nf": 1.486,
+        "type": "LMA-15"
+      },
+      "LMA-10": {
+        "omegaf": 3.8e-06,
+        "nf": 1.486,
+        "type": "LMA-10"
+      },
+      "LMA-8": {
+        "omegaf": 2.95e-06,
+        "nf": 1.486,
+        "type": "LMA-8"
+      },
+      "SM-493": {
+        "omegaf": 1.7e-06,
+        "nf": 1.486,
+        "type": "SM-493"
+      }
+    }
+  }
+}
