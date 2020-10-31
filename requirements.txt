@@ -1,0 +1,5 @@
+PySimpleGUI
+numpy
+matplotlib
+unyt
+git+https://git.ustc.edu.cn/python_packages/cavag@master#egg=cavag
