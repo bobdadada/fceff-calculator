@@ -8,7 +8,7 @@ import numpy as np
 import unyt
 
 matplotlib.use('TkAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasTKAgg as FigureCanvas
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
 from cavag.utils import calculate_total_efficiency
@@ -33,15 +33,15 @@ class Config(object):
 
 
 # 导入数据
-_dirname = os.path.abspath(os.path.dirname(__file__))
-dataset = Config(os.path.join(_dirname, "dataset.json"))
-configuration = Config(os.path.join(_dirname, "configuration.json"))
+LOCAL_DIRNAME = os.path.abspath(os.path.dirname(__file__))
+DATASET = Config(os.path.join(LOCAL_DIRNAME, "dataset.json"))
+CONFIGURATION = Config(os.path.join(LOCAL_DIRNAME, "configuration.json"))
 
 changeable_properties = []
-for key in dir(dataset):
+for key in dir(DATASET):
     if not key.startswith('_'):
         try:
-            if getattr(dataset, key)['changeable']:
+            if getattr(DATASET, key)['changeable']:
                 changeable_properties.append(key)
         except:
             pass
@@ -58,7 +58,7 @@ def convert_value_with_unit(value, srcunit, destunit):
 
 
 def value_with_unit(prop, show_unit=None):
-    data = getattr(dataset, prop)
+    data = getattr(DATASET, prop)
 
     value = data['default']
     unit = data['unit']
@@ -114,10 +114,10 @@ key_prop_plot_save = '-PROP-PLOT-SAVE-'
 def get_params_table():
     table = {}
     for prop in changeable_properties:
-        table[prop] = getattr(dataset, prop)['default']
-    table['gamma'] = getattr(dataset, 'gamma')['default']
-    table['wavelength'] = getattr(dataset, 'wavelength')['default']
-    table['fiber'] = dataset.fiber['types'][dataset.fiber['default']]
+        table[prop] = getattr(DATASET, prop)['default']
+    table['gamma'] = getattr(DATASET, 'gamma')['default']
+    table['wavelength'] = getattr(DATASET, 'wavelength')['default']
+    table['fiber'] = DATASET.fiber['types'][DATASET.fiber['default']]
 
     return table
 
@@ -145,7 +145,7 @@ def compute_prob(table):
 def compute_prob_var(prop, n=300):
     table = get_params_table()
 
-    data = getattr(dataset, prop)
+    data = getattr(DATASET, prop)
     min = data['min']
     step = data['step']
     max = data['max']
@@ -174,7 +174,7 @@ def compute_prob_var(prop, n=300):
 
 try:
     # 计算效率和绘制相关参数界面
-    ly_prob = [[sg.Text('计算%s在光纤腔中发射%s光子的效率' % (dataset.description['particle'], show_value_with_unit(value_with_unit('wavelength'))))],
+    ly_prob = [[sg.Text('计算%s在光纤腔中发射%s光子的效率' % (DATASET.description['particle'], show_value_with_unit(value_with_unit('wavelength'))))],
                [sg.Text('单个光子获取的概率:'), sg.Text(size=(8, 1), key=key_prob),
                 sg.Button('计算', key=key_prob_compute)],
                [sg.Text('_' * 70)]]
@@ -194,11 +194,11 @@ try:
         [sg.Text("选择所需的光纤:")],
         [
             sg.Text("光纤:"),
-            sg.InputCombo(tuple(dataset.fiber['types'].keys()),
-                          default_value=dataset.fiber['default'], size=(8, 1),
+            sg.InputCombo(tuple(DATASET.fiber['types'].keys()),
+                          default_value=DATASET.fiber['default'], size=(8, 1),
                           enable_events=True, key=key_fiber),
             sg.Text("参数:"),
-            sg.Text(str(dataset.fiber['types'][dataset.fiber['default']]),
+            sg.Text(str(DATASET.fiber['types'][DATASET.fiber['default']]),
                     size=(40, 1), key=key_fiber_info)
         ]
     ]
@@ -207,8 +207,8 @@ try:
 
     def update_fiber(event):
         if event == key_fiber:
-            dataset.fiber['default'] = values[event]
-            window[key_fiber_info].update(str(dataset.fiber['types'][values[event]]))
+            DATASET.fiber['default'] = values[event]
+            window[key_fiber_info].update(str(DATASET.fiber['types'][values[event]]))
 
 
     dispatch_dict[key_fiber] = update_fiber
@@ -218,7 +218,7 @@ try:
                      sg.Text('nf:'), sg.InputText('', size=(6, 1)),
                      sg.Text('omegaf:'), sg.InputText('', size=(6, 1)),
                      sg.Button("添加", key=key_fiber_add)]]
-    ly_fiber_remove = [[sg.InputCombo(tuple(dataset.fiber['types'].keys()), size=(6, 1)),
+    ly_fiber_remove = [[sg.InputCombo(tuple(DATASET.fiber['types'].keys()), size=(6, 1)),
                         sg.Button("删除", key=key_fiber_remove)]]
     ly_fiber_addremove = [
         [sg.Text("添加或删除光纤:")],
@@ -239,18 +239,18 @@ try:
             except ValueError as e:
                 print(str(e))
                 return
-            dataset.fiber['types'][type] = {
+            DATASET.fiber['types'][type] = {
                 'type': type, 'nf': nf, 'omegaf': omegaf
             }
         elif event == key_fiber_remove:
             type = ly_fiber_remove[0][0].get()
             try:
-                del dataset.fiber['types'][type]
+                del DATASET.fiber['types'][type]
             except Exception as e:
                 print(str(e))
-        window[key_fiber].update(value='', values=tuple(dataset.fiber['types'].keys()))
+        window[key_fiber].update(value='', values=tuple(DATASET.fiber['types'].keys()))
         window[key_fiber_info].update('')
-        ly_fiber_remove[0][0].update(value='', values=tuple(dataset.fiber['types'].keys()))
+        ly_fiber_remove[0][0].update(value='', values=tuple(DATASET.fiber['types'].keys()))
 
 
     dispatch_dict[key_fiber_add] = update_fiber_addremove
@@ -271,14 +271,14 @@ try:
         except Exception as e:
             print(str(e))
             return
-        getattr(dataset, prop)['default'] = handle_roundoff(
-            convert_value_with_unit(value, show_unit, getattr(dataset, prop)['unit']))
-        getattr(dataset, prop)['show_unit'] = show_unit
+        getattr(DATASET, prop)['default'] = handle_roundoff(
+            convert_value_with_unit(value, show_unit, getattr(DATASET, prop)['unit']))
+        getattr(DATASET, prop)['show_unit'] = show_unit
         window[event.replace('CHANGE', 'VALUE')].update(show_value_with_unit(value_with_unit(prop)))
 
 
     for prop in changeable_properties:
-        prop_info = getattr(dataset, prop)['info']
+        prop_info = getattr(DATASET, prop)['info']
         prop_value, prop_show_unit = value_with_unit(prop)
 
         key_prop_change = '-' + prop.upper() + '-CHANGE-'
@@ -324,7 +324,7 @@ try:
         _show_info_of = ('min','step','max','unit','show_unit')
 
         if event == key_prop_select:
-            data = {k:v for k, v in getattr(dataset, prop).items() if k in _show_info_of}
+            data = {k:v for k, v in getattr(DATASET, prop).items() if k in _show_info_of}
             unit = data['unit']
             show_unit = data['show_unit']
 
@@ -336,7 +336,7 @@ try:
                 str(handle_roundoff(convert_value_with_unit(data['max'], unit, show_unit))))
             window[key_prop_select_show_unit].update(str(data['show_unit']))
         elif event == key_prop_select_set:
-            data = getattr(dataset, prop)
+            data = getattr(DATASET, prop)
             unit = data['unit']
             show_unit = data['show_unit']
             try:
@@ -350,7 +350,7 @@ try:
             data['step'] = handle_roundoff(step)
             data['max'] = handle_roundoff(max)
 
-            data = {k:v for k, v in getattr(dataset, prop).items() if k in _show_info_of}
+            data = {k:v for k, v in getattr(DATASET, prop).items() if k in _show_info_of}
 
         window[key_prop_select_info].update(str(data))
 
@@ -389,8 +389,8 @@ try:
                 _x, _y = compute_prob_var(prop)
                 _prob = compute_prob(get_params_table())  # 当前参数组下的效率
                 # scale the value to some unit
-                _unit = getattr(dataset, prop)['unit']
-                _show_unit = getattr(dataset, prop)['show_unit']
+                _unit = getattr(DATASET, prop)['unit']
+                _show_unit = getattr(DATASET, prop)['show_unit']
                 _x = convert_value_with_unit(_x, _unit, _show_unit)
                 _y *= 100
                 _prob *= 100
@@ -415,22 +415,22 @@ try:
                                colWidths=[0.15, 0.15])
             prop_plot_ax.grid()
             prop_plot_ax.set_title(
-                "%s的%s单光子发射效率随%s影响" % (dataset.description['particle'],
-                    show_value_with_unit(value_with_unit('wavelength')), getattr(dataset, prop)['info']))
+                "%s的%s单光子发射效率随%s影响" % (DATASET.description['particle'],
+                    show_value_with_unit(value_with_unit('wavelength')), getattr(DATASET, prop)['info']))
             prop_plot_ax.set_ylabel('efficiency(%)')
             _xlabel = '%s(%s)' % (prop, _show_unit) if _show_unit else prop
             prop_plot_ax.set_xlabel(_xlabel)
             prop_plot_canvas_agg.draw()
         elif event == key_prop_plot_save:
-            if os.path.isdir(configuration.initial_folder):
-                _initial_folder = configuration.initial_folder
+            if os.path.isdir(CONFIGURATION.initial_folder):
+                _initial_folder = CONFIGURATION.initial_folder
             else:
                 _initial_folder = os.getcwd()
             _filename = sg.popup_get_file('输入保存的文件名:',
                                           save_as=True, file_types=(('png格式图像', '*.png'), ('svg矢量图', '*.svg')),
                                           keep_on_top=True, initial_folder=_initial_folder, no_window=True)
             if os.path.split(_filename)[-1].split('.')[0]:
-                configuration.initial_folder = os.path.dirname(_filename)
+                CONFIGURATION.initial_folder = os.path.dirname(_filename)
                 prop_plot_fig.savefig(_filename)
                 print('保存图片至', _filename)
 
@@ -462,6 +462,6 @@ try:
     window.close()
 finally:
     # 导出数据
-    dataset.dump()
-    configuration.dump()
+    DATASET.dump()
+    CONFIGURATION.dump()
 
