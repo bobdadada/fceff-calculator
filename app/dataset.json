@@ -1,6 +1,6 @@
 {
   "L": {
-    "default": 0.0003,
+    "default": 0.00027,
     "min": 0.0002,
     "max": 0.0004,
     "step": 1e-06,
@@ -10,7 +10,7 @@
     "show_unit": "um"
   },
   "D": {
-    "default": 8e-05,
+    "default": 6e-05,
     "min": 1e-05,
     "max": 0.000125,
     "step": 5e-06,
@@ -30,7 +30,7 @@
     "show_unit": "um"
   },
   "ROCr": {
-    "default": 0.00031,
+    "default": 0.00028,
     "min": 0.0002,
     "max": 0.0004,
     "step": 1e-06,
@@ -44,7 +44,7 @@
     "min": 0.0,
     "max": Infinity,
     "step": 1e-11,
-    "info": "腔面表面粗超度",
+    "info": "腔面表面粗糙度",
     "changeable": true,
     "unit": "m",
     "show_unit": "nm"

@@ -146,17 +146,17 @@ def compute_prob_var(prop, n=300):
     table = get_params_table()
 
     data = getattr(DATASET, prop)
-    min = data['min']
+    min_ = data['min']
     step = data['step']
-    max = data['max']
-    if min > max:
+    max_ = data['max']
+    if min_ > max_:
         raise ValueError('最大值必须比最小值大')
-    if max == float('inf'):
+    if max_ == float('inf'):
         n = int(n)
-        x = np.arange(n) * step + min
+        x = np.arange(n) * step + min_
     else:
-        n = np.min([int(n), np.max([int((max - min) / step), 50])])
-        x = np.linspace(min, max, n)
+        n = np.min([int(n), np.max([int((max_ - min_) / step), 50])])
+        x = np.linspace(min_, max_, n)
 
     y = np.empty_like(x)
 
